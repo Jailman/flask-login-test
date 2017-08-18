@@ -1,14 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from flask import Flask, current_app, request, url_for, Response, redirect, abort
+from flask import Flask, request, Response, redirect, abort
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_login import UserMixin, login_user, logout_user, login_required
-from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
-# from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-# from werkzeug.security import generate_password_hash, check_password_hash
 
 
 app = Flask(__name__)
@@ -87,7 +84,7 @@ except:
 def home():
     return Response('Hello World!<br> <a href="/logout">logout</a>')
 
- 
+
 # somewhere to login
 @app.route("/login", methods=["GET", "POST"])
 def login():
