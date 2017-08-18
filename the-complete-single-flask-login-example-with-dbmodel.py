@@ -62,8 +62,8 @@ def load_user(userid):
 
 db.create_all()
 try:
-    admin1 = User(1, 'jack', 'jack wong', 'jailman@sina.com', '111')
-    admin2 = User(2, 'jailman', 'jackass', 'jailer@123.com', '111')
+    admin1 = User('buc', 'buc les', 'buc@xy.ti', 'buz')
+    admin2 = User('zac', 'zac tol', 'zac@xy.ti', 'zab')
     db.session.add(admin1)
     db.session.add(admin2)
     db.session.commit()
@@ -88,7 +88,7 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']        
-        if password == '111' and username == 'jack':
+        if password == 'buz' and username == 'buc':
             user = User.query.filter_by(name=username).first()
             login_user(user)
             return redirect(request.args.get("next"))
