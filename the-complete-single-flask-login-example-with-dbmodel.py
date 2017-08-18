@@ -7,7 +7,8 @@ from flask_login import LoginManager
 from flask_login import UserMixin, login_user, logout_user, login_required
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+# from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+# from werkzeug.security import generate_password_hash, check_password_hash
 
 
 app = Flask(__name__)
@@ -37,7 +38,7 @@ login_manager.login_view = 'login'
 
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(255), unique=True)
     fullname = db.Column(db.String(255))
     email = db.Column(db.String(255), unique=True)
@@ -49,6 +50,11 @@ class User(db.Model, UserMixin):
         self.fullname = fullname
         self.email = email
         self.password_hash = password_hash
+
+
+    def verify_password(self, password):
+        return check_password_hash(generate_password_hash(self.password_hash), password)
+
 
     def __repr__(self):
        return "%d/%s/%s/%s" % (self.id, self.name, self.fullname, self.email)
@@ -87,9 +93,9 @@ def home():
 def login():
     if request.method == 'POST':
         username = request.form['username']
-        password = request.form['password']        
-        if password == 'buz' and username == 'buc':
-            user = User.query.filter_by(name=username).first()
+        password = request.form['password']
+        user = User.query.filter_by(name=username).first()
+        if user is not None and user.verify_password(password):
             login_user(user)
             return redirect(request.args.get("next"))
         else:
